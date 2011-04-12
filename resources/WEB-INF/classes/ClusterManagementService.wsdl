@@ -1,0 +1,222 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wsdl:definitions xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:axis2="http://ClusterManagementService.main/" xmlns:ns1="http://org.apache.axis2/xsd" xmlns:ns="http://service.cms.com" xmlns:wsaw="http://www.w3.org/2006/05/addressing/wsdl" xmlns:http="http://schemas.xmlsoap.org/wsdl/http/" xmlns:ax21="http://bean.cms.com/xsd" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" targetNamespace="http://ClusterManagementService.main/">
+    <wsdl:types>
+        <xs:schema xmlns:ax22="http://service.cms.com" attributeFormDefault="qualified" elementFormDefault="qualified" targetNamespace="http://bean.cms.com/xsd">
+            <xs:import namespace="http://service.cms.com"/>
+            <xs:complexType name="ServiceException">
+                <xs:complexContent>
+                    <xs:extension base="ax22:Exception">
+                        <xs:sequence>
+                            <xs:element minOccurs="0" name="errorMessage" nillable="true" type="xs:string"/>
+                            <xs:element maxOccurs="unbounded" minOccurs="0" name="stackTrace" nillable="true" type="xs:anyType"/>
+                        </xs:sequence>
+                    </xs:extension>
+                </xs:complexContent>
+            </xs:complexType>
+            <xs:complexType name="JobList">
+                <xs:sequence>
+                    <xs:element minOccurs="0" name="job" nillable="true" type="xs:anyType"/>
+                    <xs:element maxOccurs="unbounded" minOccurs="0" name="jobs" nillable="true" type="xs:string"/>
+                </xs:sequence>
+            </xs:complexType>
+        </xs:schema>
+        <xs:schema xmlns:ax23="http://bean.cms.com/xsd" attributeFormDefault="qualified" elementFormDefault="qualified" targetNamespace="http://service.cms.com">
+            <xs:import namespace="http://bean.cms.com/xsd"/>
+            <xs:complexType name="Exception">
+                <xs:sequence>
+                    <xs:element minOccurs="0" name="Exception" nillable="true" type="xs:anyType"/>
+                </xs:sequence>
+            </xs:complexType>
+            <xs:element name="ServiceException">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="ServiceException" nillable="true" type="ax21:ServiceException"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="submitJob">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="jobName" nillable="true" type="xs:string"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="submitJobResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="return" type="xs:boolean"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="getNodeName">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="input" nillable="true" type="xs:string"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="getNodeNameResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="return" nillable="true" type="xs:string"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="getHadoopJobsResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="return" nillable="true" type="ax21:JobList"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+        </xs:schema>
+    </wsdl:types>
+    <wsdl:message name="getNodeNameRequest">
+        <wsdl:part name="parameters" element="ns:getNodeName"/>
+    </wsdl:message>
+    <wsdl:message name="getNodeNameResponse">
+        <wsdl:part name="parameters" element="ns:getNodeNameResponse"/>
+    </wsdl:message>
+    <wsdl:message name="ServiceException">
+        <wsdl:part name="parameters" element="ns:ServiceException"/>
+    </wsdl:message>
+    <wsdl:message name="getHadoopJobsRequest"/>
+    <wsdl:message name="getHadoopJobsResponse">
+        <wsdl:part name="parameters" element="ns:getHadoopJobsResponse"/>
+    </wsdl:message>
+    <wsdl:message name="submitJobRequest">
+        <wsdl:part name="parameters" element="ns:submitJob"/>
+    </wsdl:message>
+    <wsdl:message name="submitJobResponse">
+        <wsdl:part name="parameters" element="ns:submitJobResponse"/>
+    </wsdl:message>
+    <wsdl:portType name="ClusterManagementServicePortType">
+        <wsdl:operation name="getNodeName">
+            <wsdl:input message="axis2:getNodeNameRequest" wsaw:Action="urn:getNodeName"/>
+            <wsdl:output message="axis2:getNodeNameResponse" wsaw:Action="urn:getNodeNameResponse"/>
+            <wsdl:fault message="axis2:ServiceException" name="ServiceException" wsaw:Action="urn:getNodeNameServiceException"/>
+        </wsdl:operation>
+        <wsdl:operation name="getHadoopJobs">
+            <wsdl:input message="axis2:getHadoopJobsRequest" wsaw:Action="urn:getHadoopJobs"/>
+            <wsdl:output message="axis2:getHadoopJobsResponse" wsaw:Action="urn:getHadoopJobsResponse"/>
+        </wsdl:operation>
+        <wsdl:operation name="submitJob">
+            <wsdl:input message="axis2:submitJobRequest" wsaw:Action="urn:submitJob"/>
+            <wsdl:output message="axis2:submitJobResponse" wsaw:Action="urn:submitJobResponse"/>
+            <wsdl:fault message="axis2:ServiceException" name="ServiceException" wsaw:Action="urn:submitJobServiceException"/>
+        </wsdl:operation>
+    </wsdl:portType>
+    <wsdl:binding name="ClusterManagementServiceSoap11Binding" type="axis2:ClusterManagementServicePortType">
+        <soap:binding transport="http://schemas.xmlsoap.org/soap/http" style="document"/>
+        <wsdl:operation name="getNodeName">
+            <soap:operation soapAction="urn:getNodeName" style="document"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+            <wsdl:fault name="ServiceException">
+                <soap:fault use="literal" name="ServiceException"/>
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="getHadoopJobs">
+            <soap:operation soapAction="urn:getHadoopJobs" style="document"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="submitJob">
+            <soap:operation soapAction="urn:submitJob" style="document"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+            <wsdl:fault name="ServiceException">
+                <soap:fault use="literal" name="ServiceException"/>
+            </wsdl:fault>
+        </wsdl:operation>
+    </wsdl:binding>
+    <wsdl:binding name="ClusterManagementServiceSoap12Binding" type="axis2:ClusterManagementServicePortType">
+        <soap12:binding transport="http://schemas.xmlsoap.org/soap/http" style="document"/>
+        <wsdl:operation name="getNodeName">
+            <soap12:operation soapAction="urn:getNodeName" style="document"/>
+            <wsdl:input>
+                <soap12:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal"/>
+            </wsdl:output>
+            <wsdl:fault name="ServiceException">
+                <soap12:fault use="literal" name="ServiceException"/>
+            </wsdl:fault>
+        </wsdl:operation>
+        <wsdl:operation name="getHadoopJobs">
+            <soap12:operation soapAction="urn:getHadoopJobs" style="document"/>
+            <wsdl:input>
+                <soap12:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="submitJob">
+            <soap12:operation soapAction="urn:submitJob" style="document"/>
+            <wsdl:input>
+                <soap12:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal"/>
+            </wsdl:output>
+            <wsdl:fault name="ServiceException">
+                <soap12:fault use="literal" name="ServiceException"/>
+            </wsdl:fault>
+        </wsdl:operation>
+    </wsdl:binding>
+    <wsdl:binding name="ClusterManagementServiceHttpBinding" type="axis2:ClusterManagementServicePortType">
+        <http:binding verb="POST"/>
+        <wsdl:operation name="getNodeName">
+            <http:operation location="ClusterManagementService/getNodeName"/>
+            <wsdl:input>
+                <mime:content type="text/xml" part="getNodeName"/>
+            </wsdl:input>
+            <wsdl:output>
+                <mime:content type="text/xml" part="getNodeName"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="getHadoopJobs">
+            <http:operation location="ClusterManagementService/getHadoopJobs"/>
+            <wsdl:input>
+                <mime:content type="text/xml" part="getHadoopJobs"/>
+            </wsdl:input>
+            <wsdl:output>
+                <mime:content type="text/xml" part="getHadoopJobs"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="submitJob">
+            <http:operation location="ClusterManagementService/submitJob"/>
+            <wsdl:input>
+                <mime:content type="text/xml" part="submitJob"/>
+            </wsdl:input>
+            <wsdl:output>
+                <mime:content type="text/xml" part="submitJob"/>
+            </wsdl:output>
+        </wsdl:operation>
+    </wsdl:binding>
+    <wsdl:service name="ClusterManagementService">
+        <wsdl:port name="ClusterManagementServiceHttpSoap11Endpoint" binding="axis2:ClusterManagementServiceSoap11Binding">
+            <soap:address location="http://localhost:8080/axis2/services/ClusterManagementService"/>
+        </wsdl:port>
+        <wsdl:port name="ClusterManagementServiceHttpSoap12Endpoint" binding="axis2:ClusterManagementServiceSoap12Binding">
+            <soap12:address location="http://localhost:8080/axis2/services/ClusterManagementService"/>
+        </wsdl:port>
+        <wsdl:port name="ClusterManagementServiceHttpEndpoint" binding="axis2:ClusterManagementServiceHttpBinding">
+            <http:address location="http://localhost:8080/axis2/services/ClusterManagementService"/>
+        </wsdl:port>
+    </wsdl:service>
+</wsdl:definitions>

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<service name="CloudManagementService" scope="application">
+<service name="ClusterManagementService" scope="application">
     <description>
         Service that helps in managing nodes and provides CRUD functionality for it.
     </description>
@@ -12,6 +12,7 @@
     class="org.apache.axis2.rpc.receivers.RPCMessageReceiver"/>
     </messageReceivers>
     <parameter name="ServiceClass">
-        com.cms.main.NodeInventory
+        com.cms.service.ClusterManagementService
     </parameter>
+    
 </service>
